@@ -20,13 +20,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Arroz</td>
-                        <td>$1000</td>
-                        <td>Comida</td>
-                        <td>Es un grano</td>
-                        <td></td>
+                    <tr v-for="product of products">
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.title }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.description }}</td>
+                        <td><img :src="product.image"></td>
                         <td>
                             <button><i class="fa-solid fa-pen-to-square"></i></button>
                             <button><i class="fa-solid fa-trash"></i></button>
@@ -38,6 +38,20 @@
         </div>
     </main>
 </template>
+
+
+<script setup lang="ts">
+    import {onMounted,ref, type Ref} from 'vue'
+    import ProductService from '@/services/ProductService';
+
+    const productService=new ProductService()
+    let products=productService.getProducts()
+
+    onMounted(async()=>{
+        await productService.getAll()
+    })
+
+</script>
 <style scoped>
     main{
         width: 100vw;
@@ -99,11 +113,11 @@
     }
 
     td img{
-        height: 60px;
-        width: 60px;
+        height: 100px;
+        width: 100px;
         object-fit: cover;
         border-radius: 15px;
-        border: 5px solid #ced0d2;
+        border: 3px solid #8395a7;
     }
 
     tr:hover td{
