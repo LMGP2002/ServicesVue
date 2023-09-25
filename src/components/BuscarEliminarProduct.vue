@@ -1,17 +1,36 @@
 <template>
-    <div v-if="findProduct" class="custom-modal">
+
+    <!-- Sección encontrar elemento -->
+    <div v-if="findProduct && action=='find'" class="custom-modal">
 
         <h2 class="product-name">{{findProduct.title}}</h2>
         <div class="detail-container">
-            <p class="product-detail">{{'Precio: '+findProduct.price}}</p>
-            <p class="product-detail">{{'Categoría: '+findProduct.category}}</p>
+            <p class="product-detail">Precio: ${{findProduct.price}}</p>
+            <p class="product-detail">Categoría: {{findProduct.category}}</p>
         </div>
         <div class="description-container">
             <h4>Descripción:</h4>
             <p class="product-detail">{{findProduct.description}}</p>
         </div>
         <img :src="findProduct.image" class="product-img">
-        <button @click="closeModal" class="btn-modal">Cerrar</button>
+        <button @click="closeModal" :style="{backgroundColor:'rgb(39, 88, 161)'}" class="btn-modal">Cerrar</button>
+
+    </div>
+    <!-- Sección eliminar elemento -->
+
+    <div v-else-if="deleteProduct && action=='delete'" class="custom-modal">
+
+        <h2 :style="{color:'red'}" class="product-name">Producto eliminado: {{deleteProduct.title}}</h2>
+        <div class="detail-container">
+            <p class="product-detail">Precio: ${{deleteProduct.price}}</p>
+            <p class="product-detail">Categoría: {{deleteProduct.category}}</p>
+        </div>
+        <div class="description-container">
+            <h4>Descripción:</h4>
+            <p class="product-detail">{{deleteProduct.description}}</p>
+        </div>
+        <img :src="deleteProduct.image" class="product-img">
+        <button @click="closeModal" :style="{backgroundColor:'red'}" class="btn-modal">Aceptar</button>
 
     </div>
 
@@ -24,9 +43,11 @@
 
     const productService=new ProductService()
 
-    const {idProduct}=defineProps({
-        idProduct:Number
+    const {idProduct,action}=defineProps({
+        idProduct:Number,
+        action:String
     })
+
 
     const emit=defineEmits(['closeModal'])
 
@@ -36,11 +57,17 @@
 
 
     let findProduct=productService.getProductFind()
+    let deleteProduct=productService.getProductDelete()
     
     
 
     onMounted(async ()=>{
-        await productService.findProduct(idProduct)
+        if(action=='delete'){
+            
+            await productService.deleteProduct(idProduct)
+        }else{
+            await productService.findProduct(idProduct)
+        }
         
     })
     
@@ -83,7 +110,6 @@
 
     .btn-modal{
         padding: 10px 20px;
-        background-color: rgb(39, 88, 161);
         border: none;
         color: #ffffff;
         border-radius: 15px;

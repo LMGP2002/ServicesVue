@@ -28,8 +28,8 @@
                         <td>{{ product.description }}</td>
                         <td><img :src="product.image"></td>
                         <td>
-                            <button @click="()=>openModal(product.id)"><i class="fa-solid fa-magnifying-glass"></i></button>
-                            <button><i class="fa-solid fa-trash"></i></button>
+                            <button @click="()=>openModal(product.id,'find')"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button @click="()=>openModal(product.id,'delete')"><i class="fa-solid fa-trash"></i></button>
                             <button><i class="fa-solid fa-pen-to-square"></i></button>
                         </td>
                     </tr>
@@ -40,7 +40,7 @@
     </main>
     <div v-if="modalVisible" class="container-modal">
         <div class="content-modal">
-            <BuscarProduct @closeModal="closeModal" :idProduct="idBusqueda"></BuscarProduct>
+            <BuscarEliminarProduct @closeModal="closeModal" :action="action" :idProduct="idBusqueda"></BuscarEliminarProduct>
         </div>
     </div>
 </template>
@@ -49,19 +49,21 @@
 <script setup lang="ts">
     import {onMounted,ref} from 'vue'
     import ProductService from '@/services/ProductService';
-    import BuscarProduct from '@/components/BuscarProduct.vue'
+    import BuscarEliminarProduct from '@/components/BuscarEliminarProduct.vue'
 
     const productService=new ProductService()
     let modalVisible=ref(false)
     let idBusqueda=ref(0)
+    let action=ref('')
     let products=productService.getProducts()
     
     
     
 
-    const openModal=(id:any)=>{
+    const openModal=(id:any,accion:string)=>{
         modalVisible.value=true
         idBusqueda.value=id
+        action.value=accion
     }
     const closeModal=()=>{
         modalVisible.value=false
