@@ -3,7 +3,7 @@
         <div class="table-header">
             <h1 class="title">Productos</h1>
             <div>
-                <button class="add-product">Añadir producto</button>
+                <button  @click="()=>openModal(0,'add')" class="add-product">Añadir producto</button>
             </div>
         </div>
         <div class="table-body">
@@ -30,7 +30,7 @@
                         <td>
                             <button @click="()=>openModal(product.id,'find')"><i class="fa-solid fa-magnifying-glass"></i></button>
                             <button @click="()=>openModal(product.id,'delete')"><i class="fa-solid fa-trash"></i></button>
-                            <button><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button  @click="()=>openModal(product.id,'update')"><i class="fa-solid fa-pen-to-square"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -40,7 +40,8 @@
     </main>
     <div v-if="modalVisible" class="container-modal">
         <div class="content-modal">
-            <BuscarEliminarProduct @closeModal="closeModal" :action="action" :idProduct="idBusqueda"></BuscarEliminarProduct>
+            <BuscarEliminarProduct v-if="action=='find' || action=='delete'" @closeModal="closeModal" :action="action" :idProduct="idProduct"></BuscarEliminarProduct>
+            <AgregarEditar v-else-if="action=='add' || action=='update'" @closeModal="closeModal" :action="action" :idProduct="idProduct"></AgregarEditar>
         </div>
     </div>
 </template>
@@ -50,10 +51,11 @@
     import {onMounted,ref} from 'vue'
     import ProductService from '@/services/ProductService';
     import BuscarEliminarProduct from '@/components/BuscarEliminarProduct.vue'
+    import AgregarEditar from '@/components/AgregarEditar.vue'
 
     const productService=new ProductService()
     let modalVisible=ref(false)
-    let idBusqueda=ref(0)
+    let idProduct=ref(0)
     let action=ref('')
     let products=productService.getProducts()
     
@@ -62,7 +64,7 @@
 
     const openModal=(id:any,accion:string)=>{
         modalVisible.value=true
-        idBusqueda.value=id
+        idProduct.value=id
         action.value=accion
     }
     const closeModal=()=>{
