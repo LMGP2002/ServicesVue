@@ -28,8 +28,9 @@
                         <td>{{ product.description }}</td>
                         <td><img :src="product.image"></td>
                         <td>
-                            <button><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button @click="()=>openModal(product.id)"><i class="fa-solid fa-magnifying-glass"></i></button>
                             <button><i class="fa-solid fa-trash"></i></button>
+                            <button><i class="fa-solid fa-pen-to-square"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -37,22 +38,66 @@
 
         </div>
     </main>
+    <div v-if="modalVisible" class="container-modal">
+        <div class="content-modal">
+            <BuscarProduct @closeModal="closeModal" :idProduct="idBusqueda"></BuscarProduct>
+        </div>
+    </div>
 </template>
 
 
 <script setup lang="ts">
-    import {onMounted,ref, type Ref} from 'vue'
+    import {onMounted,ref} from 'vue'
     import ProductService from '@/services/ProductService';
+    import BuscarProduct from '@/components/BuscarProduct.vue'
 
     const productService=new ProductService()
+    let modalVisible=ref(false)
+    let idBusqueda=ref(0)
     let products=productService.getProducts()
+    
+    
+    
 
+    const openModal=(id:any)=>{
+        modalVisible.value=true
+        idBusqueda.value=id
+    }
+    const closeModal=()=>{
+        modalVisible.value=false
+    }
+    
     onMounted(async()=>{
         await productService.getAll()
     })
 
 </script>
 <style scoped>
+
+    /* Estilos modal */
+
+    .container-modal{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(144, 148, 150, 0.8);
+        display: flex;
+        z-index: 100;
+    }
+
+
+    .content-modal{
+        border-radius: 15px;
+        margin: auto;
+        width: 40%;
+        height: 75%;
+        background-color: #ffffff;
+    }
+
+
+    /* Estilos tabla */
     main{
         width: 100vw;
         height: 100vh;
@@ -135,7 +180,7 @@
         margin: 5px;
     }
 
-    td button:nth-child(1){
+    td button:nth-child(3), td button:nth-child(1){
         background-color: #0298cf;
     }
     
@@ -144,7 +189,7 @@
 
     }
 
-    td button:nth-child(1):hover{
+    td button:nth-child(3):hover, td button:nth-child(1):hover{
         background-color: #266a83;
     }
     
