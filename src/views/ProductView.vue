@@ -4,6 +4,7 @@
             <h1 class="title">Productos</h1>
             <div>
                 <button  @click="()=>openModal(0,'add')" class="add-product">Añadir producto</button>
+                <button  @click="cerrarSesion" class="cerrarSesion"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </div>
         <div class="table-body">
@@ -52,15 +53,15 @@
     import ProductService from '@/services/ProductService';
     import BuscarEliminarProduct from '@/components/BuscarEliminarProduct.vue'
     import AgregarEditar from '@/components/AgregarEditar.vue'
+    import { useRouter } from 'vue-router';
+
 
     const productService=new ProductService()
     let modalVisible=ref(false)
     let idProduct=ref(0)
     let action=ref('')
     let products=productService.getProducts()
-    
-    
-    
+    const router = useRouter();
 
     const openModal=(id:any,accion:string)=>{
         modalVisible.value=true
@@ -69,6 +70,10 @@
     }
     const closeModal=()=>{
         modalVisible.value=false
+    }
+    const cerrarSesion=()=>{
+        router.push('/')
+        localStorage.removeItem('access_token')
     }
     
     onMounted(async()=>{
@@ -89,8 +94,9 @@
         background-color: rgba(144, 148, 150, 0.8);
         display: flex;
         z-index: 100;
-    }
 
+    }
+    
 
     .content-modal{
         border-radius: 15px;
@@ -119,6 +125,23 @@
         padding: 20px;
         background-color: rgb(255, 255, 255);
     }
+    .cerrarSesion{
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: transparent;
+        font-size: 20px;
+        height: 100%;
+        margin-left: 20px;
+        transition: color .3s;
+        color: #bb3838;
+        padding: .6em 1em;
+    }
+    
+    .cerrarSesion:hover{
+        color: #c47878;
+    }
+
     .table-body{
         width: 100vw;
         height: 80vh;

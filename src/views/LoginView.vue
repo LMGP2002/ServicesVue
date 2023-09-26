@@ -31,7 +31,7 @@
     const password:Ref<string>=ref('')
     let message:Ref<string>=ref('')
     const router = useRouter();
-
+        
     
     const productService=new ProductService()
     const login=async ()=>{
@@ -45,6 +45,7 @@
             if(message.value=='Credenciales correctas'){
                 router.push('/product')
             }
+
 
         }  
     }
