@@ -66,20 +66,29 @@
     let product:Ref;
         
     const addProduct=async ()=>{
-        const productObject={title:name.value,price:price.value,description:description.value,image:url.value,category:category.value}
+        if(name.value!=''&&description.value!=''&&url.value!=''&&category.value!=''){
 
-        await productService.addProduct(productObject)
-        product=await productService.getProductAdd()
-        visibleProduct.value=true;
-        
+            const productObject={title:name.value,price:price.value,description:description.value,image:url.value,category:category.value}
+    
+            await productService.addProduct(productObject)
+            product=await productService.getProductAdd()
+            visibleProduct.value=true;
+        }else{
+            alert('Rellene todos los campos')
+        }
 
     }
     const updateProduct=async ()=>{
-        const productObject={title:name.value,price:price.value,description:description.value,image:url.value,category:category.value}
+        if(name.value!=''&&description.value!=''&&url.value!=''&&category.value!=''){
 
-        await productService.updateProduct(productObject,props.idProduct)
-        product=await productService.getProductUpdate()
-        visibleProduct.value=true;
+            const productObject={title:name.value,price:price.value,description:description.value,image:url.value,category:category.value}
+    
+            await productService.updateProduct(productObject,props.idProduct)
+            product=await productService.getProductUpdate()
+            visibleProduct.value=true;
+        }else{
+            alert('Rellene todos los campos')
+        }
         
 
     }
