@@ -33,9 +33,41 @@ export default class ProductService{
     getProductUpdate(){
         return this.productUpdate;
     }
-  
+//  Obtener el access token
+    async login(dataLogin):Promise{
+        try {
+
+            let config={
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            }
+            let body = dataLogin
+            
+            
+            let response = await axios.post('https://fakestoreapi.com/auth/login', body, config);
+            let data=await response.data
+            if('token' in data){
+                let {token}=data
+                localStorage.setItem('access_token',token)
+                return 'Credenciales correctas'
+            }
+            
+        } catch (error) {
+            console.log(error);    
+            return 'Credenciales incorrectas'
+            
+        }
+    }
+//   Obtener todos los productos
     async getAll():Promise<void>{
         try{
+            // let config={
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Authorization : `Bearer ${localStorage.getItem("access_token")}`
+            //     }
+            // }
 
             let response=await axios.get("https://fakestoreapi.com/products");
             this.products.value=await response.data;

@@ -4,20 +4,52 @@
             <h2 class="">Inicia Sesión</h2>
             <div class="form-container">
                 <div class="form-group">
-                    <input class="form-input" placeholder=" " id="user" type="text">
+                    <input v-model="username" class="form-input" placeholder=" " id="user" type="text">
                     <label class="form-label" for="user">Usuario</label>
                     <span class="form-line"></span>
                 </div>
                 <div class="form-group">
-                    <input class="form-input" placeholder=" " id="password" type="password">
+                    <input v-model="password" class="form-input" placeholder=" " id="password" type="password">
                     <label class="form-label" for="password">Password</label>
                     <span class="form-line"></span>
                 </div>
-                <button class="form-button" type="button">Ingresar</button>
+                <div v-if="message=='Credenciales incorrectas'" class="msg-incorrecto">
+                    {{message}}
+                </div>
+                <button @click="login" class="form-button" type="button">Ingresar</button>
             </div>
         </form>
     </main>
 </template>
+
+<script setup lang="ts">
+    import {ref,type Ref} from 'vue'
+    import { useRouter } from 'vue-router';
+
+    import ProductService from '@/services/ProductService';
+    const username:Ref<string>=ref('')
+    const password:Ref<string>=ref('')
+    let message:Ref<string>=ref('')
+    const router = useRouter();
+
+    
+    const productService=new ProductService()
+    const login=async ()=>{
+        if(username.value!='' && password.value!=''){
+            let dataLogin={
+                username:username.value.trim(),
+                password:password.value
+            }
+            
+            message.value=await productService.login(dataLogin);
+            if(message.value=='Credenciales correctas'){
+                router.push('/product')
+            }
+
+        }  
+    }
+
+</script>
 
 <style scoped>
     main{
@@ -29,6 +61,11 @@
         background-size: 20px 20px;
         background-position: 0 0,10px 10px;
         display: flex;
+    }
+
+    .msg-incorrecto{
+        background-color: rgb(150, 78, 78);
+        color: #ffffff;
     }
 
     .form{
@@ -45,7 +82,7 @@
     .form-container{
         margin-top: 3em;
         display: grid;
-        gap: 3em;
+        gap: 2em;
     }
 
     .form-group{
