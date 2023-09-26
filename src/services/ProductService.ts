@@ -34,7 +34,7 @@ export default class ProductService{
         return this.productUpdate;
     }
 //  Obtener el access token
-    async login(dataLogin):Promise{
+    async login(dataLogin:any):Promise<any>{
         try {
 
             let config={
@@ -62,14 +62,15 @@ export default class ProductService{
 //   Obtener todos los productos
     async getAll():Promise<void>{
         try{
-            // let config={
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Authorization : `Bearer ${localStorage.getItem("access_token")}`
-            //     }
-            // }
+            
+            let config={
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `Bearer ${localStorage.getItem("access_token")}`
+                }
+            }
 
-            let response=await axios.get("https://fakestoreapi.com/products");
+            let response=await axios.get("https://fakestoreapi.com/products",config);
             this.products.value=await response.data;
 
         }catch(error){
@@ -83,7 +84,13 @@ export default class ProductService{
 
     async findProduct(id:any):Promise<void>{
         try {
-            let response=await axios.get("https://fakestoreapi.com/products/"+id);
+            let config={
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `Bearer ${localStorage.getItem("access_token")}`
+                }
+            }
+            let response=await axios.get("https://fakestoreapi.com/products/"+id,config);
             let data=await response.data
             this.productFind.value=data
             
@@ -96,7 +103,13 @@ export default class ProductService{
 
     async deleteProduct(id:any):Promise<void>{
         try {
-            let response=await axios.delete("https://fakestoreapi.com/products/"+id);
+            let config={
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `Bearer ${localStorage.getItem("access_token")}`
+                }
+            }
+            let response=await axios.delete("https://fakestoreapi.com/products/"+id,config);
             let data=await response.data
             this.productDelete.value=data
             
@@ -107,11 +120,17 @@ export default class ProductService{
     
     // Añadir un producto
     
-    async addProduct(informacionProduct){
+    async addProduct(informacionProduct:any){
         try {
+            let config={
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `Bearer ${localStorage.getItem("access_token")}`
+                }
+            }
 
             let body=informacionProduct
-            let response=await axios.post('https://fakestoreapi.com/products',body)
+            let response=await axios.post('https://fakestoreapi.com/products',body,config)
             let data=await response.data
             
             this.productAdd.value=data
@@ -122,11 +141,17 @@ export default class ProductService{
         }
     }
     // Modificar un producto
-    async updateProduct(informacionProduct,id){
+    async updateProduct(informacionProduct:any,id:any){
         try {
+            let config={
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization : `Bearer ${localStorage.getItem("access_token")}`
+                }
+            }
             
             let body=informacionProduct
-            let response=await axios.put('https://fakestoreapi.com/products/'+id,body)
+            let response=await axios.put('https://fakestoreapi.com/products/'+id,body,config)
             let data=await response.data
             
             this.productUpdate.value=data
